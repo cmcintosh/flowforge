@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL", "file:./data/flowforge.db")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Workflow {
+  id          String   @id @default(uuid())
+  name        String
+  description String   @default("")
+  active      Boolean  @default(false)
+  nodes       String   @default("[]")  // JSON array of WorkflowNode
+  connections String   @default("[]")  // JSON array of WorkflowConnection
+  settings    String   @default("{}")  // JSON WorkflowSettings
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  executions  Execution[]
+}
+
+model Credential {
+  id        String   @id @default(uuid())
+  name      String
+  type      String
+  data      String   // AES-256-GCM encrypted JSON
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Execution {
+  id         String   @id @default(uuid())
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  status     String   @default("running")  // running, success, failed, cancelled, waiting
+  mode       String   @default("manual")   // manual, webhook, cron, api
+  startedAt  DateTime @default(now())
+  finishedAt DateTime?
+  duration   Int?     // ms
+  error      String?
+  data       String   @default("[]")  // JSON array of ExecutionData
+}
+
+model Settings {
+  id                     Int      @id @default(1)
+  instanceName           String   @default("FlowForge")
+  executionTimeout       Int      @default(300)  // seconds
+  saveExecutionProgress  Boolean  @default(true)
+  saveManualExecutions   Boolean  @default(true)
+  maxExecutionDataSize   Int      @default(10240)  // KB
+}

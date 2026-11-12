@@ -1,0 +1,29 @@
+{
+  "name": "flowforge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "100% open-source MIT-licensed workflow automation platform",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @flowforge/backend dev & pnpm --filter @flowforge/frontend dev",
+    "dev:backend": "pnpm --filter @flowforge/backend dev",
+    "dev:frontend": "pnpm --filter @flowforge/frontend dev",
+    "build": "pnpm --filter @flowforge/shared build && pnpm --filter @flowforge/backend build && pnpm --filter @flowforge/frontend build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "db:generate": "pnpm --filter @flowforge/backend db:generate",
+    "db:push": "pnpm --filter @flowforge/backend db:push",
+    "db:migrate": "pnpm --filter @flowforge/backend db:migrate"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "prettier": "^3.4.0",
+    "eslint": "^9.16.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,0 +1,20 @@
+services:
+  flowforge:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - flowforge-data:/app/data
+    environment:
+      - FLOWFORGE_PORT=3000
+      - FLOWFORGE_HOST=0.0.0.0
+      - DATABASE_URL=file:/app/data/flowforge.db
+      - FLOWFORGE_ENCRYPTION_KEY=${FLOWFORGE_ENCRYPTION_KEY:-}
+      - FLOWFORGE_JWT_SECRET=${FLOWFORGE_JWT_SECRET:-flowforge-change-me}
+      - NODE_ENV=production
+    restart: unless-stopped
+
+volumes:
+  flowforge-data:
